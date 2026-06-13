@@ -19,7 +19,7 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
 ]
 requires-python = ">=3.11"
-dependencies = ["dstack>=0.19"]
+dependencies = ["dstack>=0.18.20"]
 
 [project.entry-points."dstack.plugins"]
 paralleliq = "paralleliq_dstack_plugin:ParalleliqPlugin"
