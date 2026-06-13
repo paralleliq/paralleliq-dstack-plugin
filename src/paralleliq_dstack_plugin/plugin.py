@@ -7,7 +7,7 @@ _PIQC_JOB_URL = "https://raw.githubusercontent.com/paralleliq/piqc/main/deploy/s
 
 _PIQC_MESSAGE = (
     "\n"
-    "  Paralleliq — GPU fleet detected.\n"
+    "  Paralleliq — GPU fleet detected (Kubernetes backend).\n"
     "  Run a free GPU waste scan on this cluster:\n"
     "\n"
     f"    kubectl apply -f {_PIQC_RBAC_URL}\n"
@@ -37,16 +37,31 @@ def _has_gpu_resources(resources) -> bool:
     return False
 
 
+def _is_kubernetes_eligible(backends) -> bool:
+    """
+    Return True if the spec could land on a Kubernetes backend.
+
+    - backends is None: user didn't restrict — could be K8s depending on server config
+    - backends contains "kubernetes": explicitly K8s
+    - backends contains only non-K8s entries: skip
+    """
+    if backends is None:
+        return True
+    return any(str(b).lower() == "kubernetes" for b in backends)
+
+
 class ParalleliqApplyPolicy(ApplyPolicy):
     def on_fleet_apply(self, user: str, project: str, spec: FleetSpec) -> FleetSpec:
+        backends = getattr(spec.configuration, "backends", None)
         resources = getattr(spec.configuration, "resources", None)
-        if _has_gpu_resources(resources):
+        if _is_kubernetes_eligible(backends) and _has_gpu_resources(resources):
             logger.info(_PIQC_MESSAGE)
         return spec
 
     def on_run_apply(self, user: str, project: str, spec: RunSpec) -> RunSpec:
+        backends = getattr(spec.configuration, "backends", None)
         resources = getattr(spec.configuration, "resources", None)
-        if _has_gpu_resources(resources):
+        if _is_kubernetes_eligible(backends) and _has_gpu_resources(resources):
             logger.info(_PIQC_MESSAGE)
         return spec
 
