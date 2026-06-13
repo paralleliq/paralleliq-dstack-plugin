@@ -1,0 +1,28 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "paralleliq-dstack-plugin"
+version = "0.1.0"
+description = "dstack plugin that surfaces piqc GPU waste scanning when a GPU fleet or run is applied"
+readme = "README.md"
+license = { text = "Apache-2.0" }
+authors = [{ name = "Paralleliq", email = "engineering@paralleliq.ai" }]
+keywords = ["dstack", "gpu", "kubernetes", "inference", "piqc", "paralleliq"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+requires-python = ">=3.11"
+dependencies = ["dstack>=0.19"]
+
+[project.entry-points."dstack.plugins"]
+paralleliq = "paralleliq_dstack_plugin:ParalleliqPlugin"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/paralleliq_dstack_plugin"]
