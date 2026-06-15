@@ -47,7 +47,7 @@ def _is_kubernetes_eligible(backends) -> bool:
     """
     if backends is None:
         return True
-    return any(str(b).lower() == "kubernetes" for b in backends)
+    return any(getattr(b, "value", str(b)).lower() == "kubernetes" for b in backends)
 
 
 class ParalleliqApplyPolicy(ApplyPolicy):
@@ -55,14 +55,14 @@ class ParalleliqApplyPolicy(ApplyPolicy):
         backends = getattr(spec.configuration, "backends", None)
         resources = getattr(spec.configuration, "resources", None)
         if _is_kubernetes_eligible(backends) and _has_gpu_resources(resources):
-            logger.info(_PIQC_MESSAGE)
+            logger.warning(_PIQC_MESSAGE)
         return spec
 
     def on_run_apply(self, user: str, project: str, spec: RunSpec) -> RunSpec:
         backends = getattr(spec.configuration, "backends", None)
         resources = getattr(spec.configuration, "resources", None)
         if _is_kubernetes_eligible(backends) and _has_gpu_resources(resources):
-            logger.info(_PIQC_MESSAGE)
+            logger.warning(_PIQC_MESSAGE)
         return spec
 
 

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "paralleliq-dstack-plugin"
-version = "0.1.0"
+version = "0.2.0"
 description = "dstack plugin that surfaces piqc GPU waste scanning when a GPU fleet or run is applied"
 readme = "README.md"
 license = { text = "Apache-2.0" }
